@@ -1,4 +1,4 @@
-$wrap = "\n" + "".center(80, "-") + "\n" # dashed line to wrap titles and improve output visually
+$wrap = "\n" + "".center(80, "-") + "\n" # dashed line to wrap titles, seperate lines and improve output visually
 # now to gather student data from user input
 def input_students
   puts $wrap + "Please enter the students' names into the directory.".center(80)
@@ -19,8 +19,9 @@ def input_students
     height = gets.chomp.to_i
     # passes in a hash for each student
     students << { name: name, country: country, hobbies: hobbies, height: height, cohort: cohort }
-
-    puts "Now we have #{students.count} students." + $wrap
+    # adjust student from singular to plural once number of students is > 1, global var so it can be used in the final output
+    students.size < 2 ? $student_s = 'student' : $student_s = 'students'
+    puts "Now we have #{students.count} #{$student_s}." + $wrap
     puts 'Enter next student name:'
     name = gets.chomp
   end
@@ -30,8 +31,7 @@ end
 def print_header
   puts 'The Students of Villains Academy'.center(80) # center ensures output looks good visually
 end
-# now 2 methods to allow printing students by cohort
-# first to create a hash where each key is a cohort and each value is an array of students in that cohort
+# now 2 methods to allow printing students by cohort; first to create a hash where each key is a cohort and each value is an array of students in that cohort
 def sort_by_cohort(students)
   sorted_cohorts = {}
   students.each do |student|
@@ -50,7 +50,7 @@ def print_cohorts(sorted_cohorts)
 end
 
 def print_footer(students)
-  puts $wrap + "Overall, we have #{students.count} great students!".center(80) + $wrap
+  puts $wrap + "Overall, we have #{students.count} great #{$student_s}!".center(80) + $wrap
 end
 # finally let's call all of our methods
 students = input_students
