@@ -7,7 +7,7 @@ def input_students
     # student data is stored in this array
   students = []
   name = gets.strip.capitalize
-  $student_s = 'students' #assigning this global variable here so it returns correctly in final statement if zero students are entered
+  $student_s = 'students' # assigning global variable here so it returns correctly in final statement if zero students are entered
 
   while !name.empty?
     puts 'Enter their cohort:'
@@ -18,9 +18,9 @@ def input_students
     hobbies = gets.strip.split(', ')
     puts 'Enter their height in cm:'
     height = gets.strip.to_i
-      # passes in a hash for each student
+      # passes a hash for each student into the array
     students << { name: name, country: country, hobbies: hobbies, height: height, cohort: cohort }
-      # conditionally reassigning this global variable to account for singular / plural students if no. of students > 1
+      # conditionally reassigning variable to account for singular / plural students if no. of students > 1
     students.size < 2 ? $student_s = 'student' : $student_s = 'students'
     puts "Now we have #{students.count} #{$student_s}." + $wrap
     puts 'Enter next student name:'
@@ -32,7 +32,7 @@ end
 def print_header
   puts 'The Students of Villains Academy'.center(80) # center ensures output looks good visually
 end
-  # now 2 methods to allow printing students by cohort; first to create a hash where each key is a cohort and each value is an array of students in that cohort
+  # now 2 methods to let us print students by cohort; first one creates a hash: each key a cohort, each value an array of students in that cohort
 def sort_by_cohort(students)
   sorted_cohorts = {}
   students.each do |student|
@@ -42,7 +42,7 @@ def sort_by_cohort(students)
   end
   sorted_cohorts
 end
-  # and second to iterate over the hash output from the previous `sort_by_cohort` method and puts each cohort and it's students
+  # second one iterates over the hash output from the previous `sort_by_cohort` method, printing each cohort and it's students
 def print_cohorts(sorted_cohorts)
   sorted_cohorts.each do |cohort, students|
     puts $wrap + "*** #{cohort.to_s.capitalize} cohort ***".center(80) + $wrap
