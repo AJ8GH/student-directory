@@ -7,7 +7,6 @@ def input_students
     # student data is stored in this array
   students = []
   name = gets.strip.capitalize
-  $student_s = 'students' # assigning global variable here so it returns correctly in final statement if zero students are entered
 
   while !name.empty?
     puts 'Enter their cohort:'
@@ -20,8 +19,8 @@ def input_students
     height = gets.strip.to_i
       # passes a hash for each student into the array
     students << { name: name, country: country, hobbies: hobbies, height: height, cohort: cohort }
-      # conditionally reassigning variable to account for singular / plural students if no. of students > 1
-    students.size < 2 ? $student_s = 'student' : $student_s = 'students'
+      # conditionally reassigning variable to account for singular / plural students if no. if students < 1
+    students.size == 1 ? $student_s = 'student' : $student_s = 'students'
     puts "Now we have #{students.count} #{$student_s}." + $wrap
     puts 'Enter next student name:'
     name = gets.strip
@@ -42,7 +41,7 @@ def sort_by_cohort(students)
   end
   sorted_cohorts
 end
-  # second one iterates over the hash output from the previous `sort_by_cohort` method, printing each cohort and it's students
+  # next, we iterate over the hash output from the previous `sort_by_cohort` method, printing each cohort and it's students
 def print_cohorts(sorted_cohorts)
   sorted_cohorts.each do |cohort, students|
     puts $wrap + "*** #{cohort.to_s.capitalize} cohort ***".center(80) + $wrap
@@ -56,6 +55,9 @@ end
   # finally let's call all of our methods
 students = input_students
 cohorts = sort_by_cohort(students)
-print_header
-print_cohorts(cohorts)
-print_footer(students)
+
+unless students.empty?
+  print_header
+  print_cohorts(cohorts)
+  print_footer(students)
+end
