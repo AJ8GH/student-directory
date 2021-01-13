@@ -1,5 +1,5 @@
 $wrap = "\n" + "".center(80, "-") + "\n" # dashed line to wrap titles and improve output visually
-# this method gathers student data from user input
+# now to gather student data from user input
 def input_students
   puts $wrap + "Please enter the students' names into the directory.".center(80)
   puts 'To finish, just hit return twice.'.center(80) + $wrap
@@ -30,7 +30,8 @@ end
 def print_header
   puts 'The Students of Villains Academy'.center(80) # center ensures output looks good visually
 end
-# this method creates a hash where each key is a cohort month and each value is an array of students in that cohort
+# now 2 methods to allow printing students by cohort
+# first to create a hash where each key is a cohort and each value is an array of students in that cohort
 def sort_by_cohort(students)
   sorted_cohorts = {}
   students.each do |student|
@@ -40,7 +41,7 @@ def sort_by_cohort(students)
   end
   sorted_cohorts
 end
-# this method iterates over the hash output from the `sort_by_cohort` method to print students by cohort
+# and second to iterate over the hash output from the previous `sort_by_cohort` method and puts each cohort and it's students
 def print_cohorts(sorted_cohorts)
   sorted_cohorts.each do |cohort, students|
     puts $wrap + "*** #{cohort.to_s.capitalize} cohort ***".center(80) + $wrap
@@ -51,7 +52,7 @@ end
 def print_footer(students)
   puts $wrap + "Overall, we have #{students.count} great students!".center(80) + $wrap
 end
-# now we call all of our methods and watch the magic happen :)
+# finally let's call all of our methods
 students = input_students
 cohorts = sort_by_cohort(students)
 print_header
