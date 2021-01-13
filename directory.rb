@@ -1,13 +1,26 @@
 def input_students
-  puts 'Please enter the names of the students'
-  puts 'to finish, just hit return twice'
+
+  puts 'Please enter the names of the students into the directory.'
+  puts 'To finish, just hit return twice.'
+  puts 'Enter the name of the first student:'
 
   students = []
   name = gets.chomp
 
   while !name.empty? do
-    students << { name: name, cohort: :february }
-    puts "Now we have #{students.count} students"
+    puts 'Enter their country of residence:'
+    country = gets.chomp
+
+    puts 'Enter their hobbies each seperated by a comma and a space:'
+    hobbies = gets.chomp.split(', ')
+
+    puts 'Enter their height in cm:'
+    height = gets.chomp.to_i
+
+    students << { name: name, country: country, hobbies: hobbies, height: height, cohort: :february }
+    puts "Now we have #{students.count} students."
+
+    puts 'Enter the name of the next student:'
     name = gets.chomp
   end
   students
