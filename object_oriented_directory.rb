@@ -87,7 +87,7 @@ def input_students
 
     puts "Now we have #{students.count} students."
     puts 'Enter next student name:'
-    name = gets.chomp.capitalize
+    name = gets.chomp
   end
   students
 end

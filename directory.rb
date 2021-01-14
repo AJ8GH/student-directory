@@ -1,7 +1,7 @@
 @students = []
 
 def print_menu
-  menu = { 1 => 'Input the students', 2=> 'Show the students', 3 => 'Show the Cohorts',
+  menu = { 1 => 'Input students', 2=> 'Show the students', 3 => 'Show the Cohorts',
            4 => 'Save the list to students.csv', 5 => 'Load students.csv', 9 => 'Exit'
          }
   puts "What would you like to do?"
@@ -36,7 +36,7 @@ def input_students
     puts 'Enter their cohort:'
     cohort = STDIN.gets.strip.to_sym
 
-    @students << { name: name, cohort: cohort }
+    add_students({ name: name, cohort: cohort })
     count_statement = "Now we have #{@students.count} students!"
     count_statement.sub!('students', 'student') if @students.count == 1
     puts count_statement
@@ -101,6 +101,10 @@ def print_footer
   print_wrap
 end
 
+def add_students(students)
+  @students << students
+end
+
 def save_students
   file = File.open('students.csv', 'w')
   @students.each do |student|
@@ -126,7 +130,7 @@ def load_students(filename = 'students.csv')
   file = File.open(filename, 'r')
   file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
+    add_students ({name: name, cohort: cohort.to_sym})
   end
   file.close
 end
