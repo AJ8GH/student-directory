@@ -8,14 +8,8 @@ def input_students
   while !name.empty?
     puts 'Enter their cohort:'
     cohort = gets.strip.to_sym
-    puts 'Enter their country of residence:'
-    country = gets.strip.capitalize
-    puts 'Enter their hobbies each seperated by a comma and a space:'
-    hobbies = gets.strip.split(', ')
-    puts 'Enter their height in cm:'
-    height = gets.strip.to_i
 
-    @students << { name: name, country: country, hobbies: hobbies, height: height, cohort: cohort }
+    @students << { name: name, cohort: cohort }
 
     count_statement = "Now we have #{@students.count} students!"
     count_statement.sub!('students', 'student') if @students.count == 1
@@ -26,8 +20,21 @@ def input_students
   end
 end
 
+def save_students
+  file = File.open('students.csv', 'w')
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(',')
+    file.puts csv_line
+  end
+  file.close
+end
+
+
 def print_menu
-  menu = {1 => 'Input the students', 2=> 'Show the students', 9 => 'Exit'}
+  menu = { 1 => 'Input the students', 2=> 'Show the students', 3 => 'Show the Cohorts',
+           4 => 'Save the list to students.csv', 9 => 'Exit'
+         }
   puts "What would you like to do?"
   menu.each { |n, option| puts "#{n}. #{option}"}
 end
@@ -42,6 +49,8 @@ def process(selection)
   case selection
     when '1' then students = input_students
     when '2' then show_students
+    when '3' then print_cohorts
+    when '4' then save_students
     when '9' then exit
     else puts "I don't know what you meant, try again"
   end
@@ -64,12 +73,14 @@ def sort_by_cohort
   sorted_cohorts
 end
 
-def print_cohorts(sorted_cohorts)
-  sorted_cohorts.each do |cohort, students|
+def print_cohorts
+  print_header
+  sort_by_cohort.each do |cohort, students|
     print_wrap
     puts "*** #{cohort.to_s.capitalize} Cohort ***".center(80)
     puts students.map.with_index { |student, i| "#{i+1}. #{student}".center(80) }
   end
+  print_footer
 end
 
 def print_wrap
