@@ -2,7 +2,7 @@
 
 class Menu
   @@menu = { 1 => 'Input students', 2=> 'Show the students', 3 => 'Show the Cohorts',
-            4 => 'Save the list to students.csv', 5 => 'Load students.csv', 9 => 'Exit'}
+             4 => 'Save the list to students.csv', 5 => 'Load students.csv', 9 => 'Exit'}
 
   def self.print
     print_wrap; puts format "What would you like to do?"; print_wrap
@@ -49,7 +49,6 @@ end
 
 def student_count
   puts singularise("Now we have #{@students.count} students!")
-
 end
 
 def singularise(statement)
@@ -98,12 +97,20 @@ def show_students
   print_footer
 end
 
+def print_sorted_cohorts(students)
+  puts students.map.with_index { |student, i| format "#{i+1}. #{student}" }
+end
+
+def print_cohort_title(cohort)
+  puts format "*** #{cohort.to_s.capitalize} Cohort ***"
+end
+
 def print_cohorts
   print_header
   sort_by_cohort.each do |cohort, students|
     print_wrap
-    puts format "*** #{cohort.to_s.capitalize} Cohort ***"
-    puts students.map.with_index { |student, i| format "#{i+1}. #{student}" }
+    print_cohort_title(cohort)
+    print_sorted_cohorts(students)
   end
   print_footer
 end
