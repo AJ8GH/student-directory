@@ -44,7 +44,7 @@ end
   # next, we iterate over the hash output from the previous `sort_by_cohort` method, printing each cohort and it's students
 def print_cohorts(sorted_cohorts)
   sorted_cohorts.each do |cohort, students|
-    puts $wrap + "*** #{cohort.to_s.capitalize} cohort ***".center(80) + $wrap
+    puts $wrap + "*** #{cohort.to_s.capitalize} Cohort ***".center(80) + $wrap
     puts students.map.with_index { |student, i| "#{i+1}. #{student}".center(80) }
   end
 end
