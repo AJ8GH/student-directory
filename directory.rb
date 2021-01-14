@@ -29,21 +29,29 @@ end
 
 def input_students
   print_intro
-  puts 'Enter student name:'
-
-  name = STDIN.gets.chomp
-  while !name.empty?
-    puts 'Enter their cohort:'
-    cohort = STDIN.gets.strip.to_sym
-
-    add_students({ name: name, cohort: cohort })
-    count_statement = "Now we have #{@students.count} students!"
-    count_statement.sub!('students', 'student') if @students.count == 1
-    puts count_statement
-
-    puts 'Enter next student name:'
-    name = STDIN.gets.chomp
+  get_student_name
+  while !@name.empty?
+    get_student_cohort
+    add_student({ name: @name, cohort: @cohort })
+    student_count
+    get_student_name
   end
+end
+
+def get_student_name
+  puts 'Enter student name:'
+  @name = STDIN.gets.chomp
+end
+
+def get_student_cohort
+  puts 'Enter their cohort:'
+  @cohort = STDIN.gets.chomp.to_sym
+end
+
+def student_count
+  count_statement = "Now we have #{@students.count} students!"
+  count_statement.sub!('students', 'student') if @students.count == 1
+  puts count_statement
 end
 
 def sort_by_cohort
@@ -101,8 +109,8 @@ def print_footer
   print_wrap
 end
 
-def add_students(students)
-  @students << students
+def add_student(student)
+  @students << student
 end
 
 def save_students
@@ -130,7 +138,7 @@ def load_students(filename = 'students.csv')
   file = File.open(filename, 'r')
   file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
-    add_students ({name: name, cohort: cohort.to_sym})
+    add_student({name: name, cohort: cohort.to_sym})
   end
   file.close
 end
