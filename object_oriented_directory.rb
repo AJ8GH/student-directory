@@ -11,23 +11,26 @@ class Student
   end
 end
 
-module StudentFilter
+module DirectoryFilter
   def filter_by_name(directory)
     directory.roster.select.with_index { |student, i| "#{i+1}. #{student.name}" }
   end
 
-  def filter_by_cohort(directory)
+  def filter_by_cohort
     cohorts = {}
-    directory.roster.each do |student|
-      cohorts.include? student.cohort ?
-      cohorts[student.cohort] << student.name : cohorts[student.cohort] = [student.name]
+    self.roster.each do |student|
+      if cohorts.include? student.cohort
+        cohorts[student.cohort] << student.name
+      else
+        cohorts[student.cohort] = [student.name]
+      end
     end
     cohorts
   end
 end
 
 class Printer
-  include StudentFilter
+  include DirectoryFilter
 
   def print_wrap
     puts ''.center(80, '-')
@@ -46,22 +49,24 @@ class Printer
   def print_header
     print_wrap
     puts 'The Students of Villains Academy'.center(80)
+  end
+
+  def print_footer
+    last_statement = "Overall we have #{self.roster.count} great students!".center(80)
+    last_statement.sub!('students', 'student') if self.roster.count == 1
+    print_wrap
+    puts last_statement
     print_wrap
   end
 
-  def print_footer(directory)
-    print_wrap
-    puts "We have #{directory.roster.size} great students!".center(80)
-    print_wrap
+  def print_students
+    self.filter_by_name.each_with_index { |student, i| puts "#{i}. #{student.name}".center(80) }
   end
 
-  def print_students(directory)
-    directory.roster.each_with_index { |student, i| puts "#{i}. #{student.name}".center(80) }
-  end
-
-  def print_cohorts(directory)
-    filter_by_cohort(directory).each do |cohort, names|
-      puts "*** #{cohort.to_s.capitalize} ***".center(80)
+  def print_cohorts
+    self.filter_by_cohort.each do |cohort, names|
+      print_wrap
+      puts "*** #{cohort.to_s.capitalize} Cohort ***".center(80)
       puts names.map.with_index { |name, i| "#{i+1}. #{name}".center(80) }
     end
   end
@@ -73,19 +78,25 @@ def input_students
 
   while !name.empty?
     puts 'Enter their cohort:'
-    cohort = gets.strip.to_sym.capitalize
+    cohort = gets.strip.to_sym
+
     puts 'Enter their country of residence:'
     country = gets.strip.capitalize
+
     puts 'Enter their hobbies each seperated by a comma and a space:'
     hobbies = gets.strip.split(', ')
+
     puts 'Enter their height in cm:'
     height = gets.strip.to_i
 
     students << { name: name, country: country, hobbies: hobbies, height: height, cohort: cohort }
 
+    count_statement = "Now we have #{students.count} students"
+    count_statement.sub!('students', 'student') if students.count == 1
+
     puts "Now we have #{students.count} students."
     puts 'Enter next student name:'
-    name = gets.strip
+    name = gets.strip.capitalize
   end
   students
 end
@@ -107,5 +118,5 @@ villains_academy.print_introduction
 students = input_students
 villains_academy.add_students(students)
 villains_academy.print_header
-villains_academy.print_cohorts(villains_academy)
-villains_academy.print_footer(villains_academy)
+villains_academy.print_cohorts
+villains_academy.print_footer

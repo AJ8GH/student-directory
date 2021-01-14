@@ -1,8 +1,4 @@
-$wrap = "\n" + "".center(80, "-") + "\n" # dashed line to wrap titles, seperate lines and improve output visually
-  # now to gather student data from user input
 def input_students
-  puts $wrap + "Please enter the students' names into the directory.".center(80)
-  puts 'To finish, just hit return twice.'.center(80) + $wrap
   puts 'Enter student name:'
     # student data is stored in this array
   students = []
@@ -20,16 +16,14 @@ def input_students
       # passes a hash for each student into the array
     students << { name: name, country: country, hobbies: hobbies, height: height, cohort: cohort }
       # conditionally reassigning variable to account for singular / plural students if no. if students < 1
-    students.size == 1 ? $student_s = 'student' : $student_s = 'students'
-    puts "Now we have #{students.count} #{$student_s}." + $wrap
+    count_statement = "Now we have #{students.count} student"
+    count_statement << 's' unless students.size == 1
+    puts count_statement
+
     puts 'Enter next student name:'
     name = gets.strip
   end
   students
-end
-
-def print_header
-  puts 'The Students of Villains Academy'.center(80) # center ensures output looks good visually
 end
   # now 2 methods to let us print students by cohort; first one creates a hash: each key a cohort, each value an array of students in that cohort
 def sort_by_cohort(students)
@@ -44,18 +38,39 @@ end
   # next, we iterate over the hash output from the previous `sort_by_cohort` method, printing each cohort and it's students
 def print_cohorts(sorted_cohorts)
   sorted_cohorts.each do |cohort, students|
-    puts $wrap + "*** #{cohort.to_s.capitalize} Cohort ***".center(80) + $wrap
+    print_wrap
+    puts "*** #{cohort.to_s.capitalize} Cohort ***".center(80)
     puts students.map.with_index { |student, i| "#{i+1}. #{student}".center(80) }
   end
 end
 
-def print_footer(students)
-  puts $wrap + "Overall, we have #{students.count} great #{$student_s}!".center(80) + $wrap
+def print_wrap
+  puts ''.center(80, '-')
 end
+
+def print_header
+  print_wrap
+  puts 'The Students of Villains Academy'.center(80) # center ensures output looks good visually
+end
+
+def print_footer(students)
+  final_statement = "Overall, we have #{students.count} great student!".center(80)
+  final_statement.sub!(/!/, 's!') unless students.count == 1
+  print_wrap
+  puts final_statement
+end
+
+def print_intro
+  print_wrap
+  puts "Please enter the students' names into the directory".center(80)
+  puts 'To finish, just hit return twice'.center(80)
+  print_wrap
+end
+
   # finally let's call all of our methods
+print_intro
 students = input_students
 cohorts = sort_by_cohort(students)
-
 unless students.empty?
   print_header
   print_cohorts(cohorts)
