@@ -1,16 +1,18 @@
 @students = []
 
-def print_menu
-  menu = { 1 => 'Input students', 2=> 'Show the students', 3 => 'Show the Cohorts',
-           4 => 'Save the list to students.csv', 5 => 'Load students.csv', 9 => 'Exit'
-         }
-  puts "What would you like to do?"
-  menu.each { |n, option| puts "#{n}. #{option}"}
+class Menu
+  @@menu = { 1 => 'Input students', 2=> 'Show the students', 3 => 'Show the Cohorts',
+            4 => 'Save the list to students.csv', 5 => 'Load students.csv', 9 => 'Exit'}
+
+  def self.print
+    print_wrap; puts format "What would you like to do?"; print_wrap
+    @@menu.each { |n, option| puts "#{n}. #{option}"}
+  end
 end
 
 def interactive_menu
   loop do
-    print_menu
+    Menu.print
     process(STDIN.gets.chomp)
   end
 end
@@ -28,13 +30,10 @@ def process(selection)
 end
 
 def input_students
-  print_intro
-  get_student_name
+  print_intro; get_student_name
   while !@name.empty?
-    get_student_cohort
-    add_student({ name: @name, cohort: @cohort })
-    student_count
-    get_student_name
+    get_student_cohort; add_student({ name: @name, cohort: @cohort })
+    student_count; get_student_name
   end
 end
 
@@ -49,10 +48,14 @@ def get_student_cohort
 end
 
 def student_count
-  count_statement = "Now we have #{@students.count} students!"
-  count_statement.sub!('students', 'student') if @students.count == 1
-  puts count_statement
+  puts singularise("Now we have #{@students.count} students!")
+
 end
+
+def singularise(statement)
+  @students.count == 1 ? statement.sub('students', 'student') : statement
+end
+
 
 def sort_by_cohort
   sorted_cohorts = {}
@@ -68,20 +71,24 @@ def print_wrap
   puts ''.center(80, '-')
 end
 
+def format(text)
+  text.center(80)
+end
+
 def print_intro
   print_wrap
-  puts "Please enter the students' names into the directory".center(80)
-  puts 'To finish, just hit return twice'.center(80)
+  puts format "Please enter the students' names into the directory"
+  puts format 'To finish, just hit return twice'
   print_wrap
 end
 
 def print_header
   print_wrap
-  puts 'The Students of Villains Academy'.center(80) # center ensures output looks good visually
+  puts format 'The Students of Villains Academy'
 end
 
 def print_students_list
-  @students.each_with_index { |student, i| puts "#{i+1}. #{student[:name]}".center(80)}
+  @students.each_with_index { |student, i| puts format "#{i+1}. #{student[:name]}" }
 end
 
 def show_students
@@ -95,18 +102,15 @@ def print_cohorts
   print_header
   sort_by_cohort.each do |cohort, students|
     print_wrap
-    puts "*** #{cohort.to_s.capitalize} Cohort ***".center(80)
-    puts students.map.with_index { |student, i| "#{i+1}. #{student}".center(80) }
+    puts format "*** #{cohort.to_s.capitalize} Cohort ***"
+    puts students.map.with_index { |student, i| format "#{i+1}. #{student}" }
   end
   print_footer
 end
 
 def print_footer
-  final_statement = "Overall, we have #{@students.count} great students!".center(80)
-  final_statement.sub!('students', 'student') if @students.count == 1
   print_wrap
-  puts final_statement
-  print_wrap
+  puts format singularise("Overall, we have #{@students.count} great students!")
 end
 
 def add_student(student)
