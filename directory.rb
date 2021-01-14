@@ -1,3 +1,29 @@
+class String
+  def underline
+    puts self.chomp
+    line
+  end
+
+  def overline
+    line
+    puts self.chomp
+  end
+
+  def over_under
+    line
+    puts self.chomp
+    line
+  end
+
+  def format
+    self.center(80)
+  end
+
+  def line
+    puts ''.center(80, '-')
+  end
+end
+
 @students = []
 
 class Menu
@@ -5,7 +31,7 @@ class Menu
              4 => 'Save the list to students.csv', 5 => 'Load students.csv', 9 => 'Exit'}
 
   def self.print
-    print_wrap; puts format "What would you like to do?"; print_wrap
+    "What would you like to do?".format.over_under
     @@menu.each { |n, option| puts "#{n}. #{option}"}
   end
 end
@@ -66,24 +92,13 @@ def sort_by_cohort
   sorted_cohorts
 end
 
-def print_wrap
-  puts ''.center(80, '-')
-end
-
-def format(text)
-  text.center(80)
-end
-
 def print_intro
-  print_wrap
-  puts format "Please enter the students' names into the directory"
-  puts format 'To finish, just hit return twice'
-  print_wrap
+  "Please enter the students' names into the directory".format.overline
+  'To finish, just hit return twice'.format.underline
 end
 
 def print_header
-  print_wrap
-  puts format 'The Students of Villains Academy'
+  'The Students of Villains Academy'.format.over_under
 end
 
 def print_students_list
@@ -92,32 +107,29 @@ end
 
 def show_students
   print_header
-  print_wrap
   print_students_list
   print_footer
 end
 
-def print_sorted_cohorts(students)
-  puts students.map.with_index { |student, i| format "#{i+1}. #{student}" }
+def print_cohort_students(students)
+  puts students.map.with_index { |student, i| "#{i+1}. #{student}".format }
 end
 
 def print_cohort_title(cohort)
-  puts format "*** #{cohort.to_s.capitalize} Cohort ***"
+  puts "*** #{cohort.to_s.capitalize} Cohort ***".format.overline
 end
 
 def print_cohorts
   print_header
   sort_by_cohort.each do |cohort, students|
-    print_wrap
     print_cohort_title(cohort)
-    print_sorted_cohorts(students)
+    print_cohort_students(students)
   end
   print_footer
 end
 
 def print_footer
-  print_wrap
-  puts format singularise("Overall, we have #{@students.count} great students!")
+  puts singularise("Overall, we have #{@students.count} great students!").format.overline
 end
 
 def add_student(student)
