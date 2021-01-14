@@ -74,29 +74,20 @@ end
 
 def input_students
   students = []
-  name = gets.strip.capitalize
+  name = gets.chomp
 
   while !name.empty?
     puts 'Enter their cohort:'
-    cohort = gets.strip.to_sym
+    cohort = gets.chomp.to_sym
 
-    puts 'Enter their country of residence:'
-    country = gets.strip.capitalize
-
-    puts 'Enter their hobbies each seperated by a comma and a space:'
-    hobbies = gets.strip.split(', ')
-
-    puts 'Enter their height in cm:'
-    height = gets.strip.to_i
-
-    students << { name: name, country: country, hobbies: hobbies, height: height, cohort: cohort }
+    students << { name: name, cohort: cohort }
 
     count_statement = "Now we have #{students.count} students"
     count_statement.sub!('students', 'student') if students.count == 1
 
     puts "Now we have #{students.count} students."
     puts 'Enter next student name:'
-    name = gets.strip.capitalize
+    name = gets.chomp.capitalize
   end
   students
 end

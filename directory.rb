@@ -3,7 +3,7 @@
 def input_students
   print_intro
   puts 'Enter student name:'
-  name = gets.strip.capitalize
+  name = gets.chomp
 
   while !name.empty?
     puts 'Enter their cohort:'
@@ -16,7 +16,7 @@ def input_students
     puts count_statement
 
     puts 'Enter next student name:'
-    name = gets.strip.capitalize
+    name = gets.chomp
   end
 end
 
@@ -30,10 +30,18 @@ def save_students
   file.close
 end
 
+def load_students
+  file = File.open('students.csv', 'r')
+  file.readlines.each do |line|
+    name, cohort = line.chomp.split(',')
+    @students << {name: name, cohort: cohort.to_sym}
+  end
+  file.close
+end
 
 def print_menu
   menu = { 1 => 'Input the students', 2=> 'Show the students', 3 => 'Show the Cohorts',
-           4 => 'Save the list to students.csv', 9 => 'Exit'
+           4 => 'Save the list to students.csv', 5 => 'Load students.csv', 9 => 'Exit'
          }
   puts "What would you like to do?"
   menu.each { |n, option| puts "#{n}. #{option}"}
@@ -41,6 +49,7 @@ end
 
 def show_students
   print_header
+  print_wrap
   print_students_list
   print_footer
 end
@@ -51,6 +60,7 @@ def process(selection)
     when '2' then show_students
     when '3' then print_cohorts
     when '4' then save_students
+    when '5' then load_students
     when '9' then exit
     else puts "I don't know what you meant, try again"
   end
