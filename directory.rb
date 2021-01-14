@@ -27,8 +27,8 @@ end
 @students = []
 
 class Menu
-  @@menu = { 1 => 'Input students', 2=> 'Show the students', 3 => 'Show the Cohorts',
-             4 => 'Save the list to students.csv', 5 => 'Load students.csv', 9 => 'Exit'}
+  @@menu = { 1 => 'Input students', 2=> 'Show the students', 3 => 'Show the cohorts',
+             4 => 'Save students to csv file', 5 => 'Load students.csv', 9 => 'Exit'}
 
   def self.print
     "What would you like to do?".format.over_under
@@ -39,18 +39,19 @@ end
 def interactive_menu
   loop do
     Menu.print
+    # feedback_message(STDIN.gets.chomp)
     process(STDIN.gets.chomp)
   end
 end
 
 def process(selection)
   case selection
-    when '1' then students = input_students
+    when '1' then input_students
     when '2' then show_students
     when '3' then print_cohorts
-    when '4' then save_students
-    when '5' then load_students
-    when '9' then exit
+    when '4' then puts 'Saved!'; save_students
+    when '5' then puts 'Loaded!'; load_students
+    when '9' then puts 'Bye!'; exit
     else puts "I don't know what you meant, try again"
   end
 end
@@ -74,7 +75,7 @@ def get_student_cohort
 end
 
 def student_count
-  puts singularise("Now we have #{@students.count} students!")
+  singularise("Now we have #{@students.count} students!".underline)
 end
 
 def singularise(statement)
@@ -116,7 +117,7 @@ def print_cohort_students(students)
 end
 
 def print_cohort_title(cohort)
-  puts "*** #{cohort.to_s.capitalize} Cohort ***".format.overline
+  "*** #{cohort.to_s.capitalize} Cohort ***".format.overline
 end
 
 def print_cohorts
@@ -129,15 +130,21 @@ def print_cohorts
 end
 
 def print_footer
-  puts singularise("Overall, we have #{@students.count} great students!").format.overline
+  singularise("Overall, we have #{@students.count} great students!").format.overline
 end
 
 def add_student(student)
   @students << student
 end
+#
+# def get_filename
+#   puts "Enter filename:"
+#   @filename = gets.chomp
+# end
 
 def save_students
-  file = File.open('students.csv', 'w')
+  # get_filename
+  file = File.open(@filename, 'w')
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(',')
