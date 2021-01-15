@@ -50,7 +50,7 @@ def process(selection)
     when '2' then show_students
     when '3' then print_cohorts
     when '4' then get_filename(:save)
-    when '5' then load_students(:load)
+    when '5' then get_filename(:load)
     when '9' then feedback_message(:exit)
     else puts "I don't know what you meant, try again"
   end
@@ -81,7 +81,7 @@ def get_student_cohort
 end
 
 def student_count
-  singularise("Now we have #{@students.count} students!".underline)
+  singularise("Now we have #{@students.count} students!").underline
 end
 
 def singularise(statement)
@@ -149,13 +149,20 @@ def get_filename(action)
   action == :save ? save_students(filename) : load_students(filename)
 end
 
+def convert_save_data
+  @students.map { |student| [student[:name], student[:cohort]].join(',') }
+end
+
+def convert_load_data(file)
+  file.readlines.each do |line|
+    name, cohort = line.chomp.split(',')
+    add_student({name: name, cohort: cohort.to_sym})
+  end
+end
+
 def save_students(filename)
   file = File.open(filename, 'w')
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(',')
-    file.puts csv_line
-  end
+  file.puts convert_data_for_file
   file.close
   feedback_message(:save)
 end
@@ -173,10 +180,7 @@ end
 
 def load_students(filename = 'students.csv')
   file = File.open(filename, 'r')
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-    add_student({name: name, cohort: cohort.to_sym})
-  end
+  convert_load_data(file)
   file.close
   feedback_message(:load)
 end
