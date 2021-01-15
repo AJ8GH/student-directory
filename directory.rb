@@ -1,3 +1,6 @@
+require 'csv'
+@students = []
+
 class String
   def underline
     puts self.chomp
@@ -23,8 +26,6 @@ class String
     puts ''.center(80, '-')
   end
 end
-
-@students = []
 # ----------- Input ------------
 class Menu
   @@main_menu = { 1 => 'Input students', 2 => 'Show the students', 3 => 'Show the cohorts',
@@ -57,8 +58,7 @@ end
 
 def feedback_message(action)
   feedback = { save: 'File saved', load:'File loaded', exit: 'Bye!' }
-  puts feedback[action]
-  exit if action == :exit
+  puts feedback[action]; exit if action == :exit
 end
 
 def input_students
@@ -142,7 +142,7 @@ end
 def get_filename(action)
   puts "Enter filename"
   filename = gets.chomp
-  action == :save ? save_students(filename) : load_students(filename)
+  action == :save ? save_students(filename) : check_for_file(filename)
 end
 
 def convert_save_data
@@ -150,8 +150,8 @@ def convert_save_data
 end
 
 def convert_load_data(file)
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
+  CSV.parse(file).each do |line|
+    name, cohort = line
     add_student({name: name, cohort: cohort.to_sym})
   end
 end
@@ -164,11 +164,15 @@ end
 def load_students_on_startup
   filename = ARGV.first
   return if filename.nil?
+  File.exists?(filename) ? load_students(filename) : no_file(filename); exit
+end
+
+def check_for_file(filename)
   File.exists?(filename) ? load_students(filename) : no_file(filename)
 end
 
 def no_file(filename)
-  puts "Nope, #{filename} doesn't exist."; exit
+  puts "Nope, #{filename} doesn't exist."
 end
 
 def load_students(filename = 'students.csv')
