@@ -33,7 +33,7 @@ class Menu
 
   def self.print
     "What would you like to do?".format.over_under
-    @@main_menu.each { |n, option| puts "#{n}. #{option}"}
+    @@main_menu.each { |number, option| puts "#{number}. #{option}"}
   end
 end
 
@@ -49,8 +49,8 @@ def process(selection)
     when '1' then input_students
     when '2' then show_students
     when '3' then show_cohorts
-    when '4' then get_filename(:save)
-    when '5' then get_filename(:load)
+    when '4' then @action = :save; get_filename
+    when '5' then @action = :load; get_filename
     when '6' then print_source_code
     when '7' then delete_student
     when '8' then delete_cohort
@@ -71,10 +71,15 @@ end
 def input_students
   print_intro; get_student_name
   while !@name.empty?
-    get_student_cohort;
-    add_student(convert_student_data(@name, @cohort))
-    student_count; get_student_name
+    input_cohort
+    get_student_name
   end
+end
+
+def input_cohort
+  get_student_cohort
+  add_student(convert_student_data(@name, @cohort))
+  student_count
 end
 
 def get_student_name
@@ -119,12 +124,21 @@ def singularise(statement)
   @students.count == 1 ? statement.sub('students', 'student') : statement
 end
 
+def name(student)
+  student[:name]
+end
+
+def cohort(student)
+  student[:cohort]
+end
+
 def sort_by_cohort
   sorted_cohorts = {}
   @students.each do |student|
-    sorted_cohorts.include?(student[:cohort]) ?
-    sorted_cohorts[student[:cohort]] << student[:name] :
-    sorted_cohorts[student[:cohort]] = [student[:name]]
+    name, cohort = name(student), cohort(student)
+    sorted_cohorts.include?(cohort) ?
+    sorted_cohorts[cohort] << name :
+    sorted_cohorts[cohort] = [name]
   end
   sorted_cohorts
 end
@@ -139,7 +153,7 @@ def print_header
 end
 
 def print_students_list
-  @students.each_with_index { |student, i| puts "#{i+1}. #{student[:name]}".format }
+  @students.each_with_index { |student, index| puts "#{index + 1}. #{student[:name]}".format }
 end
 
 def show_students
@@ -151,7 +165,7 @@ def no_students
 end
 
 def print_cohort_students(students)
-  puts students.map.with_index { |student, i| "#{i+1}. #{student}".format }
+  puts students.map.with_index { |student, index| "#{index + 1}. #{student}".format }
 end
 
 def print_cohort_title(cohort)
@@ -180,10 +194,10 @@ def print_source_code
   File.open(__FILE__, 'r') { |file| puts file.read }
 end
 # ----------- File ------------
-def get_filename(selection)
+def get_filename
   puts "Enter filename"
   filename = STDIN.gets.chomp
-  selection == :save ? save_students(filename) : check_for_file(filename)
+  @action == :save ? save_students(filename) : check_for_file(filename)
 end
 
 def load_students_on_startup
