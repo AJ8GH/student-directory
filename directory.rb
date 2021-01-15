@@ -183,13 +183,12 @@ end
 def get_filename(selection)
   puts "Enter filename"
   filename = STDIN.gets.chomp
-  selection == 'save' ? save_students(filename) : check_for_file(filename)
+  selection == :save ? save_students(filename) : check_for_file(filename)
 end
 
 def load_students_on_startup
   filename = ARGV.first
-  return if filename.nil?
-  check_for_file(filename)
+  filename.nil? ? load_students : check_for_file(filename)
 end
 
 def check_for_file(filename)

@@ -41,7 +41,7 @@ Experiment with the features through the interactive_menu
 * Save them under a filename of your choice
 * Load a file of students
 * Delete students and cohorts
-* Display the students and cohorts each time you manipulate the data and watch the cohorts change!
+* Display the students and cohorts each time you manipulate the data and watch them change!
 
 ## Get in touch ##
 
