@@ -27,10 +27,9 @@ class String
 end
 # ----------- Input ------------
 class Menu
-  @@main_menu = { 1 => 'Input students', 2 => 'Show the students',
-                  3 => 'Show the cohorts', 4 => 'Save students to csv file',
-                  5 => 'Load students.csv', 6 => 'Print source code', 7 => 'Delete student',
-                  9 => 'Exit' }
+  @@main_menu = { 1 => 'Input students',        2 => 'Show the students', 3 => 'Show the cohorts',
+                  4 => 'Save students to file', 5 => 'Load student file', 6 => 'Print source code',
+                  7 => 'Delete student',        8 => 'Delete cohort',     9 => 'Exit' }
 
   def self.print
     "What would you like to do?".format.over_under
@@ -54,14 +53,17 @@ def process(selection)
     when '5' then get_filename(:load)
     when '6' then print_source_code
     when '7' then delete_student
+    when '8' then delete_cohort
     when '9' then feedback_message(:exit)
     else puts "I don't know what you meant, try again"
   end
 end
 
 def feedback_message(action)
-  feedback = { save: 'File saved!', load:'File loaded!', exit: 'Bye!' }
-  puts feedback[action]; exit if action == :exit
+  feedback = {save: 'File saved!', load:'File loaded!', exit: 'Bye!',
+              delete_name: "#{@name} deleted!", delete_cohort: "#{@cohort} cohort deleted!"}
+
+  feedback[action].overline; exit if action == :exit
 end
 
 @students = []
@@ -81,7 +83,7 @@ def get_student_name
 end
 
 def get_student_cohort
-  puts 'Enter their cohort:'
+  puts 'Enter cohort:'
   @cohort = STDIN.gets.chomp.to_sym
 end
 
@@ -94,9 +96,21 @@ def add_student(student)
 end
 
 def delete_student
-  get_student_name
-  @students.each { |student| @students.delete(student) if student[:name] == @name }
+  data = get_student_name
+  delete_matching(:name, data)
+  feedback_message(:delete_name)
 end
+
+def delete_cohort
+  data = get_student_cohort
+  delete_matching(:cohort, data)
+  feedback_message(:delete_cohort)
+end
+
+def delete_matching(category, data)
+  @students = @students.reject { |student| student[category] == data }
+end
+
 # ----------- Output ------------
 def student_count
   singularise("Now we have #{@students.count} students!").underline
@@ -157,27 +171,20 @@ def print_footer
   @students. empty? ? no_students :
   singularise("Overall, we have #{@students.count} great students!").format.overline
 end
+
+def print_filename_header
+  __FILE__.format.over_under
+end
+
+def print_source_code
+  print_filename_header
+  File.open(__FILE__, 'r') { |file| puts file.read }
+end
 # ----------- File ------------
-def get_filename(action)
+def get_filename(selection)
   puts "Enter filename"
-  filename = gets.chomp
-  action == :save ? save_students(filename) : check_for_file(filename)
-end
-
-def convert_save_data
-  @students.map { |student| [student[:name], student[:cohort]].join(',') }
-end
-
-def convert_load_data(file)
-  CSV.parse(file).each do |line|
-    name, cohort = line
-    add_student(convert_student_data(name, cohort))
-  end
-end
-
-def save_students(filename)
-  File.open(filename, 'w') { |file| file.puts convert_save_data }
-  feedback_message(:save)
+  filename = STDIN.gets.chomp
+  selection == 'save' ? save_students(filename) : check_for_file(filename)
 end
 
 def load_students_on_startup
@@ -191,7 +198,7 @@ def check_for_file(filename)
 end
 
 def no_file(filename)
-  puts "#{filename} doesn't exist."
+  "Sorry, #{filename} doesn't exist.".overline
 end
 
 def load_students(filename = 'students.csv')
@@ -199,13 +206,20 @@ def load_students(filename = 'students.csv')
   feedback_message(:load)
 end
 
-def print_filename_header
-  __FILE__.format.over_under
+def convert_load_data(file)
+  CSV.parse(file).each do |line|
+    name, cohort = line
+    add_student(convert_student_data(name, cohort))
+  end
 end
 
-def print_source_code
-  print_filename_header
-  File.open(__FILE__, 'r') { |file| puts file.read }
+def convert_save_data
+  @students.map { |student| [student[:name], student[:cohort]].join(',') }
+end
+
+def save_students(filename)
+  File.open(filename, 'w') { |file| file.puts convert_save_data }
+  feedback_message(:save)
 end
 
 load_students_on_startup
