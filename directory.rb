@@ -29,7 +29,8 @@ end
 class Menu
   @@main_menu = { 1 => 'Input students', 2 => 'Show the students',
                   3 => 'Show the cohorts', 4 => 'Save students to csv file',
-                  5 => 'Load students.csv', 6 => 'Print source code', 9 => 'Exit'}
+                  5 => 'Load students.csv', 6 => 'Print source code', 7 => 'Delete student',
+                  9 => 'Exit' }
 
   def self.print
     "What would you like to do?".format.over_under
@@ -52,6 +53,7 @@ def process(selection)
     when '4' then get_filename(:save)
     when '5' then get_filename(:load)
     when '6' then print_source_code
+    when '7' then delete_student
     when '9' then feedback_message(:exit)
     else puts "I don't know what you meant, try again"
   end
@@ -91,8 +93,9 @@ def add_student(student)
   @students << student
 end
 
-def delete_student(name)
-  @students.each { |student| @students.delete(student) if student[:name] = name }
+def delete_student
+  get_student_name
+  @students.each { |student| @students.delete(student) if student[:name] == @name }
 end
 # ----------- Output ------------
 def student_count
