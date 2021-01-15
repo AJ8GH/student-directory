@@ -2,18 +2,18 @@ require 'csv'
 
 class String
   def underline
-    puts self.chomp
+    puts self
     line
   end
 
   def overline
     line
-    puts self.chomp
+    puts self
   end
 
   def over_under
     line
-    puts self.chomp
+    puts self
     line
   end
 
