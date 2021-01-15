@@ -27,10 +27,9 @@ class String
 end
 # ----------- Input ------------
 class Menu
-  @@main_menu = { 1 => 'Input students',    2 => 'Show the students',
-                  3 => 'Show the cohorts',  4 => 'Save students to csv file',
-                  5 => 'Load students.csv', 6 => 'Print source code',
-                  7 => 'Delete student',    9 => 'Exit' }
+  @@main_menu = { 1 => 'Input students', 2 => 'Show the students',
+                  3 => 'Show the cohorts', 4 => 'Save students to csv file',
+                  5 => 'Load students.csv', 6 => 'Print source code', 9 => 'Exit'}
 
   def self.print
     "What would you like to do?".format.over_under
@@ -53,31 +52,30 @@ def process(selection)
     when '4' then get_filename(:save)
     when '5' then get_filename(:load)
     when '6' then print_source_code
-    when '7' then get_student_name(:delete)
     when '9' then feedback_message(:exit)
     else puts "I don't know what you meant, try again"
   end
 end
 
 def feedback_message(action)
-  feedback = {save: 'File saved!', load:'File loaded!', delete: "#{@name} deleted!", exit: 'Bye!'}
-  feedback[action].overline; exit if action == :exit
+  feedback = { save: 'File saved!', load:'File loaded!', exit: 'Bye!' }
+  puts feedback[action]; exit if action == :exit
 end
 
 @students = []
 
 def input_students
-  print_intro; get_student_name(:add)
+  print_intro; get_student_name
   while !@name.empty?
     get_student_cohort;
     add_student(convert_student_data(@name, @cohort))
-    student_count; get_student_name(:add)
+    student_count; get_student_name
   end
 end
 
-def get_student_name(action)
+def get_student_name
   puts 'Enter student name:'
-  @name = STDIN.gets.chomp; delete_student(@name) if action == :delete
+  @name = STDIN.gets.chomp
 end
 
 def get_student_cohort
@@ -95,7 +93,6 @@ end
 
 def delete_student(name)
   @students.each { |student| @students.delete(student) if student[:name] = name }
-  feedback_message(:delete)
 end
 # ----------- Output ------------
 def student_count
@@ -159,7 +156,7 @@ def print_footer
 end
 # ----------- File ------------
 def get_filename(action)
-  "Enter filename:".overline
+  puts "Enter filename"
   filename = gets.chomp
   action == :save ? save_students(filename) : check_for_file(filename)
 end
