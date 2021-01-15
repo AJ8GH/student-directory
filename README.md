@@ -5,7 +5,7 @@ The student directory script allows you to manage the list of students enrolled 
 ## Objectives of exercise ##
 * Build a working command line app to track and manage a directory of Students.
 * Make use of Ruby's depth of syntactical features.
-* Follow the principles of Object Oriented Programming, particularly the single responsibility principle and the DRY principle of clean code, non repetitive and well organised code.
+* Follow the principles of Object Oriented Programming, particularly the single responsibility and DRY principles of clean, non repetitive and well organised code.
 
 ## App functionality ##
 * Add students to the directory
@@ -40,4 +40,4 @@ Experiment with the features through the interactive_menu
 
 ## Get in touch ##
 
-If spot any issues, or if you have ideas on how the app could be improved, either functionally, or design-wise, I'd love to hear them!
+If you have any ideas on how the app could be improved, either functionally, or design-wise, I'd love to hear them!
