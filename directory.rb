@@ -27,7 +27,7 @@ end
 @students = []
 
 class Menu
-  @@menu = { 1 => 'Input students', 2=> 'Show the students', 3 => 'Show the cohorts',
+  @@menu = { 1 => 'Input students', 2 => 'Show the students', 3 => 'Show the cohorts',
              4 => 'Save students to csv file', 5 => 'Load students.csv', 9 => 'Exit'}
 
   def self.print
@@ -49,11 +49,17 @@ def process(selection)
     when '1' then input_students
     when '2' then show_students
     when '3' then print_cohorts
-    when '4' then puts 'Saved!'; save_students
-    when '5' then puts 'Loaded!'; load_students
-    when '9' then puts 'Bye!'; exit
+    when '4' then get_filename(:save)
+    when '5' then load_students(:load)
+    when '9' then feedback_message(:exit)
     else puts "I don't know what you meant, try again"
   end
+end
+
+def feedback_message(action)
+  feedback = { save: 'File saved', load:'File loaded', exit: 'Bye!' }
+  puts feedback[action]
+  exit if action == :exit
 end
 
 def input_students
@@ -136,24 +142,25 @@ end
 def add_student(student)
   @students << student
 end
-#
-# def get_filename
-#   puts "Enter filename:"
-#   @filename = gets.chomp
-# end
 
-def save_students
-  # get_filename
-  file = File.open(@filename, 'w')
+def get_filename(action)
+  puts "Enter filename"
+  filename = gets.chomp
+  action == :save ? save_students(filename) : load_students(filename)
+end
+
+def save_students(filename)
+  file = File.open(filename, 'w')
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(',')
     file.puts csv_line
   end
   file.close
+  feedback_message(:save)
 end
 
-def try_load_students
+def load_students_on_startup
   filename = ARGV.first
   return if filename.nil?
   if File.exists?(filename)
@@ -171,7 +178,8 @@ def load_students(filename = 'students.csv')
     add_student({name: name, cohort: cohort.to_sym})
   end
   file.close
+  feedback_message(:load)
 end
 
-try_load_students
+load_students_on_startup
 interactive_menu

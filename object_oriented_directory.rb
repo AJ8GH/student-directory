@@ -1,13 +1,10 @@
 class Student
-  attr_accessor :name, :cohort, :hobbies, :country, :height, :details
+  attr_accessor :name, :cohort, :info
 
   def initialize(details = {})
-    @details = details
+    @info = info
     @name = details[:name]
     @cohort = details[:cohort]
-    @hobbies = details[:hobbies]
-    @country = details[:country]
-    @height = details[:height]
   end
 end
 
