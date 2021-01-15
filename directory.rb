@@ -110,7 +110,6 @@ end
 def delete_matching(category, data)
   @students = @students.reject { |student| student[category] == data }
 end
-
 # ----------- Output ------------
 def student_count
   singularise("Now we have #{@students.count} students!").underline
