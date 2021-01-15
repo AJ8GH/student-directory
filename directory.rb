@@ -48,7 +48,7 @@ def process(selection)
   case selection
     when '1' then input_students
     when '2' then show_students
-    when '3' then print_cohorts
+    when '3' then show_cohorts
     when '4' then get_filename(:save)
     when '5' then get_filename(:load)
     when '9' then feedback_message(:exit)
@@ -65,7 +65,7 @@ def input_students
   print_intro; get_student_name
   while !@name.empty?
     get_student_cohort;
-    add_student({ name: @name, cohort: @cohort })
+    add_student(convert_student_data(@name, @cohort))
     student_count; get_student_name
   end
 end
@@ -115,6 +115,10 @@ def show_students
   print_header; print_students_list; print_footer
 end
 
+def no_students
+  puts 'We currently have no students enrolled at the academy'.format
+end
+
 def print_cohort_students(students)
   puts students.map.with_index { |student, i| "#{i+1}. #{student}".format }
 end
@@ -123,7 +127,7 @@ def print_cohort_title(cohort)
   "*** #{cohort.to_s.capitalize} Cohort ***".format.overline
 end
 
-def print_cohorts
+def show_cohorts
   print_header; sort_by_cohort.each do |cohort, students|
     print_cohort_title(cohort)
     print_cohort_students(students)
@@ -132,11 +136,16 @@ def print_cohorts
 end
 
 def print_footer
+  @students. empty? ? no_students :
   singularise("Overall, we have #{@students.count} great students!").format.overline
 end
 
 def add_student(student)
   @students << student
+end
+
+def convert_student_data(name, cohort)
+  {name: name, cohort: cohort.to_sym}
 end
 # ----------- File ------------
 def get_filename(action)
@@ -152,7 +161,7 @@ end
 def convert_load_data(file)
   CSV.parse(file).each do |line|
     name, cohort = line
-    add_student({name: name, cohort: cohort.to_sym})
+    add_student(convert_student_data(name, cohort))
   end
 end
 
@@ -164,7 +173,7 @@ end
 def load_students_on_startup
   filename = ARGV.first
   return if filename.nil?
-  File.exists?(filename) ? load_students(filename) : no_file(filename); exit
+  check_for_file(filename)
 end
 
 def check_for_file(filename)
