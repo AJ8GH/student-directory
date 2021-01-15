@@ -1,5 +1,4 @@
 require 'csv'
-@students = []
 
 class String
   def underline
@@ -28,8 +27,10 @@ class String
 end
 # ----------- Input ------------
 class Menu
-  @@main_menu = { 1 => 'Input students', 2 => 'Show the students', 3 => 'Show the cohorts',
-             4 => 'Save students to csv file', 5 => 'Load students.csv', 9 => 'Exit'}
+  @@main_menu = { 1 => 'Input students',    2 => 'Show the students',
+                  3 => 'Show the cohorts',  4 => 'Save students to csv file',
+                  5 => 'Load students.csv', 6 => 'Print source code',
+                  7 => 'Delete student',    9 => 'Exit' }
 
   def self.print
     "What would you like to do?".format.over_under
@@ -51,33 +52,50 @@ def process(selection)
     when '3' then show_cohorts
     when '4' then get_filename(:save)
     when '5' then get_filename(:load)
+    when '6' then print_source_code
+    when '7' then get_student_name(:delete)
     when '9' then feedback_message(:exit)
     else puts "I don't know what you meant, try again"
   end
 end
 
 def feedback_message(action)
-  feedback = { save: 'File saved', load:'File loaded', exit: 'Bye!' }
-  puts feedback[action]; exit if action == :exit
+  feedback = {save: 'File saved!', load:'File loaded!', delete: "#{@name} deleted!", exit: 'Bye!'}
+  feedback[action].overline; exit if action == :exit
 end
 
+@students = []
+
 def input_students
-  print_intro; get_student_name
+  print_intro; get_student_name(:add)
   while !@name.empty?
     get_student_cohort;
     add_student(convert_student_data(@name, @cohort))
-    student_count; get_student_name
+    student_count; get_student_name(:add)
   end
 end
 
-def get_student_name
+def get_student_name(action)
   puts 'Enter student name:'
-  @name = STDIN.gets.chomp
+  @name = STDIN.gets.chomp; delete_student(@name) if action == :delete
 end
 
 def get_student_cohort
   puts 'Enter their cohort:'
   @cohort = STDIN.gets.chomp.to_sym
+end
+
+def convert_student_data(name, cohort)
+  {name: name, cohort: cohort.to_sym}
+end
+
+def add_student(student)
+  @students << student
+end
+
+def delete_student(name)
+  @students.each { |student| @students.delete(student) if student[:name] = name }
+  feedback_message(:delete)
 end
 # ----------- Output ------------
 def student_count
@@ -108,7 +126,7 @@ def print_header
 end
 
 def print_students_list
-  @students.each_with_index { |student, i| puts format "#{i+1}. #{student[:name]}" }
+  @students.each_with_index { |student, i| puts "#{i+1}. #{student[:name]}".format }
 end
 
 def show_students
@@ -139,17 +157,9 @@ def print_footer
   @students. empty? ? no_students :
   singularise("Overall, we have #{@students.count} great students!").format.overline
 end
-
-def add_student(student)
-  @students << student
-end
-
-def convert_student_data(name, cohort)
-  {name: name, cohort: cohort.to_sym}
-end
 # ----------- File ------------
 def get_filename(action)
-  puts "Enter filename"
+  "Enter filename:".overline
   filename = gets.chomp
   action == :save ? save_students(filename) : check_for_file(filename)
 end
@@ -181,12 +191,21 @@ def check_for_file(filename)
 end
 
 def no_file(filename)
-  puts "Nope, #{filename} doesn't exist."
+  puts "#{filename} doesn't exist."
 end
 
 def load_students(filename = 'students.csv')
   File.open(filename, 'r') { |file| convert_load_data(file) }
   feedback_message(:load)
+end
+
+def print_filename_header
+  __FILE__.format.over_under
+end
+
+def print_source_code
+  print_filename_header
+  File.open(__FILE__, 'r') { |file| puts file.read }
 end
 
 load_students_on_startup
