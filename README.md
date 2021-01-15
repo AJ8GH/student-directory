@@ -37,6 +37,11 @@ ruby directory.rb
 ```
 
 Experiment with the features through the interactive_menu
+* Add your own roster of students to the Academy
+* Save them under a filename of your choice
+* Load a file of students
+* Delete students and cohorts
+* Display the students and cohorts each time you manipulate the data and watch the cohorts change!
 
 ## Get in touch ##
 
