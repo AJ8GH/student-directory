@@ -157,9 +157,8 @@ def convert_load_data(file)
 end
 
 def save_students(filename)
-  file = File.open(filename, 'w')
-  file.puts convert_data_for_file
-  file.close; feedback_message(:save)
+  File.open(filename, 'w') { |file| file.puts convert_save_data }
+  feedback_message(:save)
 end
 
 def load_students_on_startup
@@ -173,9 +172,8 @@ def no_file(filename)
 end
 
 def load_students(filename = 'students.csv')
-  file = File.open(filename, 'r')
-  convert_load_data(file)
-  file.close; feedback_message(:load)
+  File.open(filename, 'r') { |file| convert_load_data(file) }
+  feedback_message(:load)
 end
 
 load_students_on_startup
