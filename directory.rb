@@ -25,7 +25,7 @@ class String
 end
 
 @students = []
-
+# ----------- Input ------------
 class Menu
   @@menu = { 1 => 'Input students', 2 => 'Show the students', 3 => 'Show the cohorts',
              4 => 'Save students to csv file', 5 => 'Load students.csv', 9 => 'Exit'}
@@ -39,7 +39,6 @@ end
 def interactive_menu
   loop do
     Menu.print
-    # feedback_message(STDIN.gets.chomp)
     process(STDIN.gets.chomp)
   end
 end
@@ -79,7 +78,7 @@ def get_student_cohort
   puts 'Enter their cohort:'
   @cohort = STDIN.gets.chomp.to_sym
 end
-
+# ----------- Output ------------
 def student_count
   singularise("Now we have #{@students.count} students!").underline
 end
@@ -87,7 +86,6 @@ end
 def singularise(statement)
   @students.count == 1 ? statement.sub('students', 'student') : statement
 end
-
 
 def sort_by_cohort
   sorted_cohorts = {}
@@ -142,7 +140,7 @@ end
 def add_student(student)
   @students << student
 end
-
+# ----------- File ------------
 def get_filename(action)
   puts "Enter filename"
   filename = gets.chomp
