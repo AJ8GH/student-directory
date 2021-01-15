@@ -27,12 +27,12 @@ end
 @students = []
 # ----------- Input ------------
 class Menu
-  @@menu = { 1 => 'Input students', 2 => 'Show the students', 3 => 'Show the cohorts',
+  @@main_menu = { 1 => 'Input students', 2 => 'Show the students', 3 => 'Show the cohorts',
              4 => 'Save students to csv file', 5 => 'Load students.csv', 9 => 'Exit'}
 
   def self.print
     "What would you like to do?".format.over_under
-    @@menu.each { |n, option| puts "#{n}. #{option}"}
+    @@main_menu.each { |n, option| puts "#{n}. #{option}"}
   end
 end
 
@@ -64,7 +64,8 @@ end
 def input_students
   print_intro; get_student_name
   while !@name.empty?
-    get_student_cohort; add_student({ name: @name, cohort: @cohort })
+    get_student_cohort;
+    add_student({ name: @name, cohort: @cohort })
     student_count; get_student_name
   end
 end
@@ -111,9 +112,7 @@ def print_students_list
 end
 
 def show_students
-  print_header
-  print_students_list
-  print_footer
+  print_header; print_students_list; print_footer
 end
 
 def print_cohort_students(students)
@@ -125,8 +124,7 @@ def print_cohort_title(cohort)
 end
 
 def print_cohorts
-  print_header
-  sort_by_cohort.each do |cohort, students|
+  print_header; sort_by_cohort.each do |cohort, students|
     print_cohort_title(cohort)
     print_cohort_students(students)
   end
@@ -161,26 +159,23 @@ end
 def save_students(filename)
   file = File.open(filename, 'w')
   file.puts convert_data_for_file
-  file.close
-  feedback_message(:save)
+  file.close; feedback_message(:save)
 end
 
 def load_students_on_startup
   filename = ARGV.first
   return if filename.nil?
-  if File.exists?(filename)
-    load_students(filename)
-  else
-    puts "Sorry, #{filename} doesn't exist."
-    exit
-  end
+  File.exists?(filename) ? load_students(filename) : no_file(filename)
+end
+
+def no_file(filename)
+  puts "Nope, #{filename} doesn't exist."; exit
 end
 
 def load_students(filename = 'students.csv')
   file = File.open(filename, 'r')
   convert_load_data(file)
-  file.close
-  feedback_message(:load)
+  file.close; feedback_message(:load)
 end
 
 load_students_on_startup
