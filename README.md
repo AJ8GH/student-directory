@@ -2,7 +2,6 @@
 
 The student directory script allows you to manage the list of students enrolled at Villains Academy.
 
-##Maintainability
 [![Maintainability](https://api.codeclimate.com/v1/badges/8509a769b582522bc1fd/maintainability)](https://codeclimate.com/github/AJ8GH/student-directory/maintainability)
 
 ## Objectives of exercise ##
