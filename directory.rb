@@ -1,5 +1,5 @@
 require 'csv'
-
+# add methods to String to use with dot syntax
 class String
   def underline
     puts self
@@ -38,12 +38,13 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(STDIN.gets.chomp)
+    @selection = STDIN.gets.chomp
+    process
   end
 end
 
-def process(selection)
-  case selection
+def process
+  case @selection
     when '1' then input_students
     when '2' then show_students
     when '3' then show_cohorts
@@ -67,7 +68,7 @@ end
 @students = []
 
 def input_students
-  print_intro; get_student_name
+  @input_intro.over_under; get_student_name
   while !@name.empty?
     input_cohort
     get_student_name
@@ -76,7 +77,7 @@ end
 
 def input_cohort
   get_student_cohort
-  add_student(convert_student_data(@name, @cohort))
+  add_student(convert_student_data)
   student_count
 end
 
@@ -90,8 +91,8 @@ def get_student_cohort
   @cohort = STDIN.gets.chomp.to_sym
 end
 
-def convert_student_data(name, cohort)
-  {name: name, cohort: cohort.to_sym}
+def convert_student_data
+  {name: @name, cohort: @cohort.to_sym}
 end
 
 def add_student(student)
@@ -114,6 +115,10 @@ def delete_matching(category, data)
   @students = @students.reject { |student| student[category] == data }
 end
 # ----------- Output ------------
+
+@header = 'The Students of Villains Academy'.format
+@input_intro = "Please enter the students' names into the directory\nTo finish, just hit return twice."
+
 def student_count
   singularise("Now we have #{@students.count} students!").underline
 end
@@ -123,31 +128,21 @@ def singularise(statement)
 end
 
 def name(student)
-  student[:name]
+  @name = student[:name]
 end
 
 def cohort(student)
-  student[:cohort]
+  @cohort = student[:cohort]
 end
 
 def sort_by_cohort
   sorted_cohorts = {}
   @students.each do |student|
-    name, cohort = name(student), cohort(student)
-    sorted_cohorts.include?(cohort) ?
-    sorted_cohorts[cohort] << name :
-    sorted_cohorts[cohort] = [name]
+  name(student); cohort(student)
+    sorted_cohorts.include?(@cohort) ?
+    sorted_cohorts[@cohort] << @name : sorted_cohorts[@cohort] = [@name]
   end
   sorted_cohorts
-end
-
-def print_intro
-  "Please enter the students' names into the directory".format.overline
-  'To finish, just hit return twice'.format.underline
-end
-
-def print_header
-  'The Students of Villains Academy'.format.over_under
 end
 
 def print_students_list
@@ -155,7 +150,7 @@ def print_students_list
 end
 
 def show_students
-  print_header; print_students_list; print_footer
+  @header.over_under; print_students_list; print_footer
 end
 
 def no_students
@@ -166,13 +161,9 @@ def print_cohort_students(students)
   puts students.map.with_index { |student, index| "#{index + 1}. #{student}".format }
 end
 
-def print_cohort_title(cohort)
-  "*** #{cohort.to_s.capitalize} Cohort ***".format.overline
-end
-
 def show_cohorts
-  print_header; sort_by_cohort.each do |cohort, students|
-    print_cohort_title(cohort)
+  @header.over_under; sort_by_cohort.each do |cohort, students|
+    "*** #{cohort.to_s.capitalize} Cohort ***".format.overline
     print_cohort_students(students)
   end
   print_footer
@@ -183,12 +174,8 @@ def print_footer
   singularise("Overall, we have #{@students.count} great students!").format.overline
 end
 
-def print_filename_header
-  __FILE__.format.over_under
-end
-
 def print_source_code
-  print_filename_header
+  __FILE__.format.over_under
   File.open(__FILE__, 'r') { |file| puts file.read }
 end
 # ----------- File ------------
@@ -200,7 +187,7 @@ end
 
 def load_students_on_startup
   filename = ARGV.first
-  filename.nil? ? load_students : check_for_file(filename)
+  filename ? check_for_file(filename) : load_students
 end
 
 def check_for_file(filename)
@@ -218,13 +205,13 @@ end
 
 def convert_load_data(file)
   CSV.parse(file).each do |line|
-    name, cohort = line
-    add_student(convert_student_data(name, cohort))
+    @name, @cohort = line
+    add_student(convert_student_data)
   end
 end
 
 def convert_save_data
-  @students.map { |student| [student[:name], student[:cohort]].join(',') }
+  @students.map { |student| [name(student), cohort(student)].join(',') }
 end
 
 def save_students(filename)
