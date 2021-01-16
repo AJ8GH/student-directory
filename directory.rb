@@ -25,6 +25,7 @@ class String
     puts ''.center(80, '-')
   end
 end
+
 # ----------- Input ------------
 @main_menu = { 1 => 'Input students',        2 => 'Show the students', 3 => 'Show the cohorts',
                4 => 'Save students to file', 5 => 'Load student file', 6 => 'Print source code',
@@ -114,8 +115,8 @@ end
 def delete_matching(category, data)
   @students = @students.reject { |student| student[category] == data }
 end
-# ----------- Output ------------
 
+# ----------- Output ------------
 @header = 'The Students of Villains Academy'.format
 @input_intro = "Please enter the students' names into the directory\nTo finish, just hit return twice."
 
@@ -178,6 +179,7 @@ def print_source_code
   __FILE__.format.over_under
   File.open(__FILE__, 'r') { |file| puts file.read }
 end
+
 # ----------- File ------------
 def get_filename
   puts "Enter filename"
