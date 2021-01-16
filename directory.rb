@@ -26,20 +26,18 @@ class String
   end
 end
 # ----------- Input ------------
-class Menu
-  @@main_menu = { 1 => 'Input students',        2 => 'Show the students', 3 => 'Show the cohorts',
-                  4 => 'Save students to file', 5 => 'Load student file', 6 => 'Print source code',
-                  7 => 'Delete student',        8 => 'Delete cohort',     9 => 'Exit' }
+@main_menu = { 1 => 'Input students',        2 => 'Show the students', 3 => 'Show the cohorts',
+               4 => 'Save students to file', 5 => 'Load student file', 6 => 'Print source code',
+               7 => 'Delete student',        8 => 'Delete cohort',     9 => 'Exit' }
 
-  def self.print
-    "What would you like to do?".format.over_under
-    @@main_menu.each { |number, option| puts "#{number}. #{option}"}
-  end
+def print_menu
+  "What would you like to do?".format.over_under
+  @main_menu.each { |number, option| puts "#{number}. #{option}"}
 end
 
 def interactive_menu
   loop do
-    Menu.print
+    print_menu
     process(STDIN.gets.chomp)
   end
 end

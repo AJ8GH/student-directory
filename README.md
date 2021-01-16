@@ -3,9 +3,7 @@
 The student directory script allows you to manage the list of students enrolled at Villains Academy.
 
 ## Objectives of exercise ##
-* Build a working command line app to track and manage a directory of Students.
-* Make use of Ruby's depth of syntactical features.
-* Follow the principles of Object Oriented Programming, particularly the single responsibility and DRY principles of clean, non repetitive and well organised code.
+The goal of this project was to build an interactive command line application which can be used to store and manage a directory of Students (villains). By Making use of Ruby's of object oriented features, my ambition was to follow the principles of object oriented design as closely as possible, in particular the single responsibility principle and DRY, by extracting each functionality into its own method wherever possible.
 
 ## App functionality ##
 * Add students to the directory
