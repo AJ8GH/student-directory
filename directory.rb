@@ -27,9 +27,9 @@ class String
 end
 
 # ----------- Input ------------
-@main_menu = { 1 => 'Input students',        2 => 'Show the students', 3 => 'Show the cohorts',
-               4 => 'Save students to file', 5 => 'Load student file', 6 => 'Print source code',
-               7 => 'Delete student',        8 => 'Delete cohort',     9 => 'Exit' }
+@main_menu = {1 => 'Input students',        2 => 'Show the students', 3 => 'Show the cohorts',
+              4 => 'Save students to file', 5 => 'Load student file', 6 => 'Print source code',
+              7 => 'Delete student',        8 => 'Delete cohort',     9 => 'Exit'}
 
 def print_menu
   "What would you like to do?".format.over_under
@@ -63,7 +63,7 @@ def feedback_message(action)
   feedback = {save: 'File saved!', load:'File loaded!', exit: 'Bye!',
               delete_name: "#{@name} deleted!", delete_cohort: "#{@cohort} cohort deleted!"}
 
-  feedback[action].overline; exit if action == :exit
+  feedback[action].format.overline; exit if action == :exit
 end
 
 @students = []
@@ -197,7 +197,7 @@ def check_for_file(filename)
 end
 
 def no_file(filename)
-  "Sorry, #{filename} doesn't exist.".overline
+  "Sorry, #{filename} doesn't exist.".format.overline
 end
 
 def load_students(filename = 'students.csv')
