@@ -1,13 +1,13 @@
-# student-directory #
+# Student Directory
 
 The student directory script allows you to manage the list of students enrolled at Villains Academy.
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/8509a769b582522bc1fd/maintainability)](https://codeclimate.com/github/AJ8GH/student-directory/maintainability)
 
-## Objectives of exercise ##
+## Objectives of exercise
 The goal of this project was to build an interactive command line application which can be used to store and manage a directory of Students (villains). By Making use of Ruby's of object oriented features, my ambition was to follow the principles of object oriented design as closely as possible, in particular the single responsibility principle and DRY, by extracting each functionality into its own method wherever possible.
 
-## App functionality ##
+## App functionality
 * Add students to the directory
 * Save added students to a chosen file
 * Display all enrolled students
@@ -17,12 +17,12 @@ The goal of this project was to build an interactive command line application wh
 * Delete an entire cohort
 * Print the app source code to the console
 
-## Technologies used ##
+## Technologies used
 * Ruby
 * Command Line
 * CSV
 
-## How to use ##
+## How to use
 
 Clone this repository:
 * git@github.com:AJ8GH/student-directory.git
@@ -43,6 +43,6 @@ Experiment with the features through the interactive_menu
 * Delete students and cohorts
 * Display the students and cohorts each time you manipulate the data and watch them change!
 
-## Get in touch ##
+## Get in touch
 
 If you have any ideas on how the app could be improved, either functionally, or design-wise, I'd love to hear them!
